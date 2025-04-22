@@ -1,6 +1,10 @@
 package pl.filipizydorczyk.passwordmanager.ui.composable
 
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.Alignment
@@ -11,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,15 +23,18 @@ import androidx.compose.ui.tooling.preview.Preview
 fun SettingsModal(
     isOpen: Boolean,
     onDismiss: () -> Unit,
-    onKeyAdd: () -> Unit,
+    onKeyAdd: (uri: Uri?) -> Unit,
     isKeyUploaded: Boolean
 ) {
+    val keyLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri -> onKeyAdd(uri) }
+    val vaultLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree()) {  }
+
     if (isOpen) {
         ModalBottomSheet(
             onDismissRequest = { onDismiss() },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(250.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = "Settings", fontWeight = FontWeight.Medium, color = Color.Black)
@@ -35,12 +43,31 @@ fun SettingsModal(
                     fontWeight = FontWeight.Normal,
                     color = Color.Black
                 )
+                Text(
+                    text = "No vault selected",
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    MainButton(text = "Upload a key", variant = MainButtonVariant.PRIMARY, onClick = { onKeyAdd() })
+                    MainButton(
+                        text = "Upload a key",
+                        variant = MainButtonVariant.PRIMARY,
+                        onClick = { keyLauncher.launch("*/*") }
+                    )
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MainButton(
+                        text = "Select a vault",
+                        variant = MainButtonVariant.PRIMARY,
+                        onClick = { vaultLauncher.launch(null) }
+                    )
                 }
             }
         }

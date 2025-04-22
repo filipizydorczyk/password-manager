@@ -1,16 +1,28 @@
 package pl.filipizydorczyk.passwordmanager.ui.composable
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import pl.filipizydorczyk.passwordmanager.R
+
+fun handleCopy(context: Context, text: String) {
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("label", text)
+    clipboardManager.setPrimaryClip(clip)
+    Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,9 +33,10 @@ fun PasswordModal(
     password: String,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onCopy: () -> Unit,
     onCancel: () -> Unit
 ) {
+    val context = LocalContext.current
+
     if (isOpen) {
         ModalBottomSheet(
             onDismissRequest = { onDismiss() },
@@ -58,7 +71,7 @@ fun PasswordModal(
                 Text(text = label, fontWeight = FontWeight.Medium, color = Color.Black)
                 Text(text = password, fontWeight = FontWeight.Normal, color = Color.Black)
                 Spacer(modifier = Modifier.height(16.dp))
-                MainButton(text = "Copy", variant = MainButtonVariant.PRIMARY, onClick = { onCopy() })
+                MainButton(text = "Copy", variant = MainButtonVariant.PRIMARY, onClick = { handleCopy(context, password) })
                 MainButton(text = "Cancel", variant = MainButtonVariant.SECONDARY, onClick = { onCancel() })
             }
         }
@@ -75,7 +88,6 @@ fun PreviewPasswordModalOpen() {
         password = "mySecretPassword",
         onEdit = {},
         onDelete = {},
-        onCopy = {},
         onCancel = {}
     )
 }
@@ -90,7 +102,6 @@ fun PreviewPasswordModalClosed() {
         password = "mySecretPassword",
         onEdit = {},
         onDelete = {},
-        onCopy = {},
         onCancel = {}
     )
 }

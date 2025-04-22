@@ -60,7 +60,13 @@ fun MainView() {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                StringList(list = tmppasswords.value, onClick = { selectedPass.value = it } )
+                StringList(
+                    list = if (query.value.isEmpty()) {
+                        tmppasswords.value
+                    } else {
+                        tmppasswords.value.filter { it.contains(query.value, ignoreCase = true) }
+                    },
+                    onClick = { selectedPass.value = it } )
             }
         }
 
@@ -73,7 +79,6 @@ fun MainView() {
         NewPasswordModal(
             isOpen = openNewPass.value,
             onDismiss = { openNewPass.value = false },
-            onGenerate = { /*TODO*/ },
             onSave = { name, password -> {} },
             onCancel = { openNewPass.value = false }
         )
@@ -84,7 +89,6 @@ fun MainView() {
             password = "aso232-dsa",
             onEdit = { /*TODO*/ },
             onDelete = { /*TODO*/ },
-            onCopy = { /*TODO*/ },
             onCancel = { selectedPass.value = null }
         )
     }

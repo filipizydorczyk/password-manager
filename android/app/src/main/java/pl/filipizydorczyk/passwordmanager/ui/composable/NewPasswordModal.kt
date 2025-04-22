@@ -9,13 +9,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.tooling.preview.Preview
+import java.security.SecureRandom
+
+fun generatePassword(length: Int): String {
+    val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    val random = SecureRandom()
+    val password = (1..length).map { characters[random.nextInt(characters.length)] }.joinToString("")
+    return password
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPasswordModal(
     isOpen: Boolean,
     onDismiss: () -> Unit,
-    onGenerate: () -> Unit,
     onSave: (String, String) -> Unit,
     onCancel: () -> Unit
 ) {
@@ -60,7 +67,7 @@ fun NewPasswordModal(
                     label = { Text(text = "Password") }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                MainButton(text = "Generate new password", variant = MainButtonVariant.PRIMARY, onClick = { onGenerate() })
+                MainButton(text = "Generate new password", variant = MainButtonVariant.PRIMARY, onClick = { password.value = generatePassword(14) })
                 MainButton(text = "Save", variant = MainButtonVariant.PRIMARY, onClick = { onSave(name.value, password.value) })
                 MainButton(text = "Cancel", variant = MainButtonVariant.SECONDARY, onClick = { onCancel() })
             }
@@ -74,7 +81,6 @@ fun PreviewNewPasswordModalOpen() {
     NewPasswordModal(
         isOpen = true,
         onDismiss = {},
-        onGenerate = {},
         onSave = { name, password ->
             // Handle save action in preview (no-op)
         },
@@ -88,7 +94,6 @@ fun PreviewNewPasswordModalClosed() {
     NewPasswordModal(
         isOpen = false,
         onDismiss = {},
-        onGenerate = {},
         onSave = { name, password ->
             // Handle save action in preview (no-op)
         },
