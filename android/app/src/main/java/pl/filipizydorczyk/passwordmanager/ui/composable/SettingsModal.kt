@@ -22,12 +22,14 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun SettingsModal(
     isOpen: Boolean,
+    vault: String?,
     onDismiss: () -> Unit,
     onKeyAdd: (uri: Uri?) -> Unit,
+    onVaultAdd: (uri: Uri?) -> Unit,
     isKeyUploaded: Boolean
 ) {
     val keyLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri -> onKeyAdd(uri) }
-    val vaultLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree()) {  }
+    val vaultLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocumentTree()) { uri -> onVaultAdd(uri) }
 
     if (isOpen) {
         ModalBottomSheet(
@@ -44,9 +46,10 @@ fun SettingsModal(
                     color = Color.Black
                 )
                 Text(
-                    text = "No vault selected",
+                    text = if(vault != null) "Vault:$vault" else "No vault selected",
                     fontWeight = FontWeight.Normal,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 1
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
@@ -74,6 +77,18 @@ fun SettingsModal(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewSettingsModalOpenWithEverythingUploaded() {
+    SettingsModal(
+        isOpen = true,
+        onDismiss = {},
+        onKeyAdd = {},
+        onVaultAdd = {},
+        vault = "/test/vault",
+        isKeyUploaded = true
+    )
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -82,6 +97,8 @@ fun PreviewSettingsModalOpenWithKeyUploaded() {
         isOpen = true,
         onDismiss = {},
         onKeyAdd = {},
+        onVaultAdd = {},
+        vault = null,
         isKeyUploaded = true
     )
 }
@@ -93,6 +110,8 @@ fun PreviewSettingsModalOpenWithoutKeyUploaded() {
         isOpen = true,
         onDismiss = {},
         onKeyAdd = {},
+        onVaultAdd = {},
+        vault = null,
         isKeyUploaded = false
     )
 }
@@ -104,6 +123,8 @@ fun PreviewSettingsModalClosed() {
         isOpen = false,
         onDismiss = {},
         onKeyAdd = {},
+        onVaultAdd = {},
+        vault = null,
         isKeyUploaded = false
     )
 }
