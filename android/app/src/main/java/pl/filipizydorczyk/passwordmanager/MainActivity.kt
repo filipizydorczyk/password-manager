@@ -1,5 +1,6 @@
 package pl.filipizydorczyk.passwordmanager
 
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
 fun MainView(viewModel: DataViewModel) {
     val context = LocalContext.current
     val vault by viewModel.vault.collectAsState(initial = null)
+    val isKeyUploaded by viewModel.isKeyUploaded.collectAsState(initial = false)
 
     var query = remember { mutableStateOf("") }
 
@@ -67,6 +69,16 @@ fun MainView(viewModel: DataViewModel) {
     fun handleVaultChange(value: String) {
         viewModel.updateVaultValue(value);
         Toast.makeText(context, "Set vault to $value", Toast.LENGTH_SHORT).show()
+    }
+
+    fun handleKeyChange(uri: Uri?) {
+        if(uri != null) {
+            viewModel.uploadKeyFile(uri);
+            Toast.makeText(context, "File uploaded", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            Toast.makeText(context, "Couldn't read selected file", Toast.LENGTH_SHORT).show()
+        }
     }
 
     Scaffold(
@@ -91,10 +103,10 @@ fun MainView(viewModel: DataViewModel) {
         SettingsModal(
             isOpen = openSettings.value,
             onDismiss = { openSettings.value = false },
-            onKeyAdd = { uri -> Toast.makeText(context, uri.toString(), Toast.LENGTH_SHORT).show() },
+            onKeyAdd = { uri -> handleKeyChange(uri) },
             onVaultAdd = { uri -> handleVaultChange(uri.toString()) },
             vault = vault,
-            isKeyUploaded = true
+            isKeyUploaded = isKeyUploaded
         )
         NewPasswordModal(
             isOpen = openNewPass.value,

@@ -11,10 +11,10 @@
       <entry key="PreviewPasswordManagerAppBar">
         <State />
       </entry>
-      <entry key="PreviewPasswordModalClosed">
+      <entry key="StringListNoItemsPreview">
         <State />
       </entry>
-      <entry key="PreviewPasswordModalOpen">
+      <entry key="StringListPreview">
         <State />
       </entry>
       <entry key="app">

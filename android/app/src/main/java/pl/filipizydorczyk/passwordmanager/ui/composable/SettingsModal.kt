@@ -46,7 +46,7 @@ fun SettingsModal(
                     color = Color.Black
                 )
                 Text(
-                    text = if(vault != null) "Vault:$vault" else "No vault selected",
+                    text = if(vault != null) "Vault:...${vault.takeLast(20)}" else "No vault selected",
                     fontWeight = FontWeight.Normal,
                     color = Color.Black,
                     maxLines = 1
