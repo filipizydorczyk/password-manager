@@ -1,5 +1,6 @@
 package pl.filipizydorczyk.passwordmanager
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -66,9 +67,12 @@ fun MainView(viewModel: DataViewModel) {
     }
 
 
-    fun handleVaultChange(value: String) {
-        viewModel.updateVaultValue(value);
-        Toast.makeText(context, "Set vault to $value", Toast.LENGTH_SHORT).show()
+    fun handleVaultChange(value: Uri?) {
+        value?.let { safeUri ->
+            context.contentResolver.takePersistableUriPermission(safeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            viewModel.updateVaultValue(safeUri.toString());
+            Toast.makeText(context, "Set vault to $value", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun handleKeyChange(uri: Uri?) {
@@ -104,7 +108,7 @@ fun MainView(viewModel: DataViewModel) {
             isOpen = openSettings.value,
             onDismiss = { openSettings.value = false },
             onKeyAdd = { uri -> handleKeyChange(uri) },
-            onVaultAdd = { uri -> handleVaultChange(uri.toString()) },
+            onVaultAdd = { uri -> handleVaultChange(uri) },
             vault = vault,
             isKeyUploaded = isKeyUploaded
         )

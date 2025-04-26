@@ -2,6 +2,7 @@ package pl.filipizydorczyk.passwordmanager
 
 import android.content.Context
 import android.net.Uri
+import android.provider.DocumentsContract
 import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -37,14 +38,9 @@ class DataViewModel(private val context: Context) : ViewModel() {
                 .map { preferences -> preferences[vaultKey] }
                 .collect { value ->
                     _vaultValue.value = value
-//                    val vaultDir = File(_vaultValue.value)
-//                    if (vaultDir.exists() && vaultDir.isDirectory) {
-//                        val files = vaultDir.listFiles()?.map { it.name } ?: emptyList()
-//                        Toast.makeText(context, "Vault files: ${files.joinToString()}", Toast.LENGTH_LONG).show()
-//                    } else {
-//                        _vaultFiles.value = emptyList()
-//                    }
-
+                    if(value != null) {
+                        readFilesInDirectory(value)
+                    }
                 }
 
         }
@@ -75,12 +71,33 @@ class DataViewModel(private val context: Context) : ViewModel() {
         _isKeyUploaded.value = key != null;
     }
 
-    fun getPasswordKey(): ByteArray?{
+    private fun getPasswordKey(): ByteArray? {
         val file = File(context.dataDir, "key")
         if (file.exists()) {
             return file.readBytes();
         }
 
         return null;
+    }
+
+    private fun readFilesInDirectory(uriString: String) {
+        val contentResolver = context.contentResolver
+        val uri = Uri.parse(uriString)
+        val documentId = DocumentsContract.getTreeDocumentId(uri)
+
+        if (documentId != null) {
+            try {
+                val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri, documentId)
+                val cursor = contentResolver.query(childrenUri, null, null, null, null)
+
+                Toast.makeText(context, "Vault files: ${cursor?.count}", Toast.LENGTH_LONG).show()
+
+                cursor?.close()
+            } catch (e: SecurityException) {
+                Toast.makeText(context, "Security exception: ${e.message}", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "An error occurred: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }
