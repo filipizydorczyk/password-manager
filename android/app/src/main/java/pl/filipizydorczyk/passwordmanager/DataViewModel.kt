@@ -24,10 +24,12 @@ class DataViewModel(private val context: Context) : ViewModel() {
     private val vaultKey = stringPreferencesKey("vault")
 
     private val _vaultValue = MutableStateFlow<String?>("")
-    private val _isKeyUploaded = MutableStateFlow<Boolean>(false)
+    private val _isKeyUploaded = MutableStateFlow(false)
+    private val _passFiles = MutableStateFlow<ArrayList<String>>(arrayListOf())
 
     val vault: StateFlow<String?> = _vaultValue
     val isKeyUploaded: StateFlow<Boolean> = _isKeyUploaded
+    val passFiles: StateFlow<ArrayList<String>> = _passFiles
 
     init {
         viewModelScope.launch {
@@ -39,7 +41,7 @@ class DataViewModel(private val context: Context) : ViewModel() {
                 .collect { value ->
                     _vaultValue.value = value
                     if(value != null) {
-                        readFilesInDirectory(value)
+                        _passFiles.value = readFilesInDirectory(value)
                     }
                 }
 
@@ -80,7 +82,7 @@ class DataViewModel(private val context: Context) : ViewModel() {
         return null;
     }
 
-    private fun readFilesInDirectory(uriString: String) {
+    private fun readFilesInDirectory(uriString: String): ArrayList<String> {
         val contentResolver = context.contentResolver
         val uri = Uri.parse(uriString)
         val documentId = DocumentsContract.getTreeDocumentId(uri)
@@ -90,14 +92,25 @@ class DataViewModel(private val context: Context) : ViewModel() {
                 val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri, documentId)
                 val cursor = contentResolver.query(childrenUri, null, null, null, null)
 
-                Toast.makeText(context, "Vault files: ${cursor?.count}", Toast.LENGTH_LONG).show()
+                val files = arrayListOf<String>()
 
-                cursor?.close()
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        val fileName = cursor.getString(cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DISPLAY_NAME))
+                        files.add(fileName)
+                    }
+                    cursor.close()
+                }
+
+                return files;
             } catch (e: SecurityException) {
                 Toast.makeText(context, "Security exception: ${e.message}", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
                 Toast.makeText(context, "An error occurred: ${e.message}", Toast.LENGTH_LONG).show()
             }
+
         }
+
+        return arrayListOf()
     }
 }

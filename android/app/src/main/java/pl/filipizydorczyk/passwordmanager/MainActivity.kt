@@ -49,23 +49,13 @@ fun MainView(viewModel: DataViewModel) {
     val context = LocalContext.current
     val vault by viewModel.vault.collectAsState(initial = null)
     val isKeyUploaded by viewModel.isKeyUploaded.collectAsState(initial = false)
+    val passFiles by viewModel.passFiles.collectAsState(initial = arrayListOf())
 
     var query = remember { mutableStateOf("") }
 
     var openSettings = remember { mutableStateOf(false) }
     var selectedPass = remember { mutableStateOf<String?>(null) }
     var openNewPass = remember { mutableStateOf(false) }
-
-
-    val tmppasswords = remember {
-        mutableStateOf(
-            arrayListOf(
-                "discord",
-                "imdb",
-            )
-        )
-    }
-
 
     fun handleVaultChange(value: Uri?) {
         value?.let { safeUri ->
@@ -96,9 +86,9 @@ fun MainView(viewModel: DataViewModel) {
             ) {
                 StringList(
                     list = if (query.value.isEmpty()) {
-                        tmppasswords.value
+                        passFiles
                     } else {
-                        tmppasswords.value.filter { it.contains(query.value, ignoreCase = true) }
+                        passFiles.filter { it.contains(query.value, ignoreCase = true) }
                     },
                     onClick = { selectedPass.value = it } )
             }
