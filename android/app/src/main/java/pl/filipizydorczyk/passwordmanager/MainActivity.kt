@@ -51,11 +51,11 @@ fun MainView(viewModel: DataViewModel) {
     val isKeyUploaded by viewModel.isKeyUploaded.collectAsState(initial = false)
     val passFiles by viewModel.passFiles.collectAsState(initial = arrayListOf())
 
-    var query = remember { mutableStateOf("") }
+    val query = remember { mutableStateOf("") }
 
-    var openSettings = remember { mutableStateOf(false) }
-    var selectedPass = remember { mutableStateOf<String?>(null) }
-    var openNewPass = remember { mutableStateOf(false) }
+    val openSettings = remember { mutableStateOf(false) }
+    val selectedPass = remember { mutableStateOf<String?>(null) }
+    val openNewPass = remember { mutableStateOf(false) }
 
     fun handleVaultChange(value: Uri?) {
         value?.let { safeUri ->
@@ -105,7 +105,7 @@ fun MainView(viewModel: DataViewModel) {
         NewPasswordModal(
             isOpen = openNewPass.value,
             onDismiss = { openNewPass.value = false },
-            onSave = { name, password -> {} },
+            onSave = { name, password -> viewModel.addPassword(name, password); openNewPass.value = false },
             onCancel = { openNewPass.value = false }
         )
         PasswordModal(
@@ -114,7 +114,7 @@ fun MainView(viewModel: DataViewModel) {
             label = "Password",
             password = "aso232-dsa",
             onEdit = { /*TODO*/ },
-            onDelete = { /*TODO*/ },
+            onDelete = { viewModel.removePassword(selectedPass.value!!); selectedPass.value = null },
             onCancel = { selectedPass.value = null }
         )
     }

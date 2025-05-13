@@ -47,7 +47,7 @@ fun StringList(list: List<String>, onClick: (v: String) -> Unit) {
                     elevation = CardDefaults.cardElevation(defaultElevation = Dp.Hairline),
                 ) {
                     Box( modifier = Modifier.padding(16.dp)) {
-                        Text(text = list[item], style = MaterialTheme.typography.bodyLarge)
+                        Text(text = list[item].replace(".json",""), style = MaterialTheme.typography.bodyLarge)
                     }
                 }
                 Divider(

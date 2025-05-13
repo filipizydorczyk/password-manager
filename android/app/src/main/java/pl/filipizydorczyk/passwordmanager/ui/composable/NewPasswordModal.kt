@@ -37,6 +37,11 @@ fun NewPasswordModal(
         unfocusedIndicatorColor = Color.Transparent
     )
 
+    LaunchedEffect(isOpen) {
+        name.value = ""
+        password.value = ""
+    }
+
     if (isOpen) {
         ModalBottomSheet(
             onDismissRequest = { onDismiss() },
