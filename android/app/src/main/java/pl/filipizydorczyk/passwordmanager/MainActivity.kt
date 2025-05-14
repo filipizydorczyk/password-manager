@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +57,10 @@ fun MainView(viewModel: DataViewModel) {
     val openSettings = remember { mutableStateOf(false) }
     val selectedPass = remember { mutableStateOf<String?>(null) }
     val openNewPass = remember { mutableStateOf(false) }
+
+    val currentPass = remember {
+        derivedStateOf { viewModel.getPassword(selectedPass.value)?.encryptedData }
+    }
 
     fun handleVaultChange(value: Uri?) {
         value?.let { safeUri ->
@@ -111,8 +116,8 @@ fun MainView(viewModel: DataViewModel) {
         PasswordModal(
             isOpen = selectedPass.value != null,
             onDismiss = { selectedPass.value = null },
-            label = "Password",
-            password = "aso232-dsa",
+            label = selectedPass.value,
+            password = currentPass.value,
             onEdit = { /*TODO*/ },
             onDelete = { viewModel.removePassword(selectedPass.value!!); selectedPass.value = null },
             onCancel = { selectedPass.value = null }

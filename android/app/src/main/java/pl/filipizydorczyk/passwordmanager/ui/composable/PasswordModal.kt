@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import pl.filipizydorczyk.passwordmanager.R
 
 fun handleCopy(context: Context, text: String) {
@@ -29,8 +30,8 @@ fun handleCopy(context: Context, text: String) {
 fun PasswordModal(
     isOpen: Boolean,
     onDismiss: () -> Unit,
-    label: String,
-    password: String,
+    label: String?,
+    password: String?,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onCancel: () -> Unit
@@ -47,32 +48,42 @@ fun PasswordModal(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    IconButton(onClick = { onEdit() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_edit_document_24),
-                            contentDescription = "Edit",
-                            tint = Color.Black
-                        )
+                if(label != null && password != null) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        IconButton(onClick = { onEdit() }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_edit_document_24),
+                                contentDescription = "Edit",
+                                tint = Color.Black
+                            )
+                        }
+                        IconButton(onClick = { onDelete() }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
+                                contentDescription = "Delete",
+                                tint = Color.Red
+                            )
+                        }
                     }
-                    IconButton(onClick = { onDelete() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
-                            contentDescription = "Delete",
-                            tint = Color.Red
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_add_moderator_24),
+                        contentDescription = "Password",
+                        tint = Color.Black
+                    )
+                    Text(text = label, fontWeight = FontWeight.Medium, color = Color.Black)
+                    Text(text = password, fontWeight = FontWeight.Normal, color = Color.Black)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    MainButton(text = "Copy", variant = MainButtonVariant.PRIMARY, onClick = { handleCopy(context, password) })
+                    MainButton(text = "Cancel", variant = MainButtonVariant.SECONDARY, onClick = { onCancel() })
                 }
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_add_moderator_24),
-                    contentDescription = "Password",
-                    tint = Color.Black
-                )
-                Text(text = label, fontWeight = FontWeight.Medium, color = Color.Black)
-                Text(text = password, fontWeight = FontWeight.Normal, color = Color.Black)
-                Spacer(modifier = Modifier.height(16.dp))
-                MainButton(text = "Copy", variant = MainButtonVariant.PRIMARY, onClick = { handleCopy(context, password) })
-                MainButton(text = "Cancel", variant = MainButtonVariant.SECONDARY, onClick = { onCancel() })
+                else {
+                    Text(
+                        text = "Corrupted password file",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight().wrapContentSize(Alignment.Center)
+                    )
+                }
             }
         }
     }
@@ -100,6 +111,20 @@ fun PreviewPasswordModalClosed() {
         onDismiss = {},
         label = "Password",
         password = "mySecretPassword",
+        onEdit = {},
+        onDelete = {},
+        onCancel = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPasswordModalMissingDataClosed() {
+    PasswordModal(
+        isOpen = true,
+        onDismiss = {},
+        label = null,
+        password = null,
         onEdit = {},
         onDelete = {},
         onCancel = {}

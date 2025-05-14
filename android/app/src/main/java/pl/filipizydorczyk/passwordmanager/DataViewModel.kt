@@ -13,12 +13,14 @@ import androidx.documentfile.provider.DocumentFile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileReader
 import java.io.FileWriter
 import java.io.IOException
 import java.io.OutputStream
@@ -99,6 +101,35 @@ class DataViewModel(private val context: Context) : ViewModel() {
         }
 
         _passFiles.value = readFilesInDirectory(_vaultValue.value!!)
+    }
+
+    fun getPassword(name: String?): PasswordDataModel? {
+        if(name == null) {
+            return null;
+        }
+
+        if(vault.value == null) {
+            return null;
+        }
+
+        val baseUri = Uri.parse(vault.value)
+        val documentFile = DocumentFile.fromTreeUri(context, baseUri)
+        val file = documentFile?.findFile(name) ?: return null
+
+        return try {
+            val uri = file.uri
+            val contentResolver = context.contentResolver
+            val inputStream = contentResolver.openInputStream(uri)
+
+            val gson = Gson()
+            val data = gson.fromJson(inputStream?.reader(), PasswordDataModel::class.java)
+            inputStream?.close()
+
+            data;
+        } catch (e: Exception) {
+            e.printStackTrace();
+            null;
+        }
     }
 
     fun removePassword(name: String) {
