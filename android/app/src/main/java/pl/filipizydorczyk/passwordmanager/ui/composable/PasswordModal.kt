@@ -48,23 +48,23 @@ fun PasswordModal(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if(label != null && password != null) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                        IconButton(onClick = { onEdit() }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_edit_document_24),
-                                contentDescription = "Edit",
-                                tint = Color.Black
-                            )
-                        }
-                        IconButton(onClick = { onDelete() }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
-                                contentDescription = "Delete",
-                                tint = Color.Red
-                            )
-                        }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    IconButton(enabled = label != null && password != null, onClick = { onEdit() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_edit_document_24),
+                            contentDescription = "Edit",
+                            tint = Color.Black
+                        )
                     }
+                    IconButton(onClick = { onDelete() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
+                            contentDescription = "Delete",
+                            tint = Color.Red
+                        )
+                    }
+                }
+                if(label != null && password != null) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_add_moderator_24),
                         contentDescription = "Password",

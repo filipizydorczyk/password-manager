@@ -81,10 +81,21 @@ class DataViewModel(private val context: Context) : ViewModel() {
     }
 
     fun addPassword(name: String, password: String) {
-        val data = PasswordDataModel("test", password);
-        val jsonObject = data.toJson();
         val treeUri = Uri.parse(_vaultValue.value)
         val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+
+        val keyByteArray = getPasswordKey()
+        if(keyByteArray == null) {
+            Toast.makeText(context, "Key file is not configured", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val data = encryptString(password, keyByteArray)
+        if(data == null) {
+            Toast.makeText(context, "Password encrypt step failed", Toast.LENGTH_LONG).show()
+            return
+        }
+        val jsonObject = data.toJson();
 
         if (documentFile != null && documentFile.canWrite()) {
             val newFile = documentFile.createFile("application/json", "$name.json")
@@ -103,12 +114,18 @@ class DataViewModel(private val context: Context) : ViewModel() {
         _passFiles.value = readFilesInDirectory(_vaultValue.value!!)
     }
 
-    fun getPassword(name: String?): PasswordDataModel? {
+    fun getPassword(name: String?): String? {
         if(name == null) {
             return null;
         }
 
         if(vault.value == null) {
+            return null;
+        }
+
+        val keyByteArray = getPasswordKey()
+        if(keyByteArray == null) {
+            Toast.makeText(context, "Key file is not configured", Toast.LENGTH_LONG).show()
             return null;
         }
 
@@ -125,7 +142,9 @@ class DataViewModel(private val context: Context) : ViewModel() {
             val data = gson.fromJson(inputStream?.reader(), PasswordDataModel::class.java)
             inputStream?.close()
 
-            data;
+
+
+            decryptString(data.encryptedData, keyByteArray, data.iv);
         } catch (e: Exception) {
             e.printStackTrace();
             null;

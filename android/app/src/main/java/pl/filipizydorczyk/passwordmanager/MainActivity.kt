@@ -59,7 +59,7 @@ fun MainView(viewModel: DataViewModel) {
     val openNewPass = remember { mutableStateOf(false) }
 
     val currentPass = remember {
-        derivedStateOf { viewModel.getPassword(selectedPass.value)?.encryptedData }
+        derivedStateOf { viewModel.getPassword(selectedPass.value) }
     }
 
     fun handleVaultChange(value: Uri?) {
