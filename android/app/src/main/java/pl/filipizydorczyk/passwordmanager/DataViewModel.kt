@@ -114,6 +114,39 @@ class DataViewModel(private val context: Context) : ViewModel() {
         _passFiles.value = readFilesInDirectory(_vaultValue.value!!)
     }
 
+    fun updatePassword(name: String, password: String) {
+        val treeUri = Uri.parse(_vaultValue.value)
+        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+
+        val keyByteArray = getPasswordKey()
+        if(keyByteArray == null) {
+            Toast.makeText(context, "Key file is not configured", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val data = encryptString(password, keyByteArray)
+        if(data == null) {
+            Toast.makeText(context, "Password encrypt step failed", Toast.LENGTH_LONG).show()
+            return
+        }
+        val jsonObject = data.toJson();
+
+        if (documentFile != null && documentFile.canWrite()) {
+            val existingFile = documentFile.findFile(name)
+            if (existingFile != null) {
+                val outputStream: OutputStream = context.contentResolver.openOutputStream(existingFile.uri)!!
+                outputStream.write(jsonObject.toByteArray())
+                outputStream.close()
+            } else {
+                Toast.makeText(context, "Password with this name does not exist.", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(context, "You can't save password in this directory.", Toast.LENGTH_LONG).show()
+        }
+
+        _passFiles.value = readFilesInDirectory(_vaultValue.value!!)
+    }
+
     fun getPassword(name: String?): String? {
         if(name == null) {
             return null;

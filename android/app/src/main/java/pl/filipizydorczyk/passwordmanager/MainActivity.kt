@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import pl.filipizydorczyk.passwordmanager.ui.composable.AddPasswordFloatingButton
+import pl.filipizydorczyk.passwordmanager.ui.composable.EditPasswordModal
 import pl.filipizydorczyk.passwordmanager.ui.composable.NewPasswordModal
 import pl.filipizydorczyk.passwordmanager.ui.composable.PasswordManagerAppBar
 import pl.filipizydorczyk.passwordmanager.ui.composable.PasswordModal
@@ -57,6 +58,7 @@ fun MainView(viewModel: DataViewModel) {
     val openSettings = remember { mutableStateOf(false) }
     val selectedPass = remember { mutableStateOf<String?>(null) }
     val openNewPass = remember { mutableStateOf(false) }
+    val editPass = remember { mutableStateOf<String?>(null) }
 
     val currentPass = remember {
         derivedStateOf { viewModel.getPassword(selectedPass.value) }
@@ -77,6 +79,16 @@ fun MainView(viewModel: DataViewModel) {
         }
         else {
             Toast.makeText(context, "Couldn't read selected file", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun handlePassEdit(name: String?, newPass: String) {
+        val editedPassName = selectedPass.value
+        if(name != null) {
+            viewModel.updatePassword(name, newPass)
+            editPass.value = null
+            selectedPass.value = null
+            selectedPass.value = editedPassName
         }
     }
 
@@ -118,9 +130,16 @@ fun MainView(viewModel: DataViewModel) {
             onDismiss = { selectedPass.value = null },
             label = selectedPass.value,
             password = currentPass.value,
-            onEdit = { /*TODO*/ },
+            onEdit = { editPass.value = currentPass.value },
             onDelete = { viewModel.removePassword(selectedPass.value!!); selectedPass.value = null },
             onCancel = { selectedPass.value = null }
+        )
+        EditPasswordModal(
+            isOpen = editPass.value != null,
+            onDismiss = { editPass.value = null },
+            initialValue = editPass.value,
+            onSave = { newPass -> handlePassEdit(selectedPass.value, newPass) },
+            onCancel = {editPass.value = null}
         )
     }
 }
