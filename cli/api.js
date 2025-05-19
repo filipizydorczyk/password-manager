@@ -1,5 +1,4 @@
 #!/bin/node
-const Writable = require('stream').Writable;
 const readline = require("readline");
 const crypto = require("crypto");
 const fs = require("fs");
