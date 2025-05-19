@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import java.security.SecureRandom
 
 fun generatePassword(length: Int): String {
@@ -58,18 +59,18 @@ fun NewPasswordModal(
                     value = name.value,
                     onValueChange = { name.value = it },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(25.dp),
+                    shape = RoundedCornerShape(10.dp),
                     colors = textColors,
-                    label = { Text(text = "Name") }
+                    label = { Text(text = "Name", fontSize = 12.sp) }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = password.value,
                     onValueChange = { password.value = it },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(25.dp),
+                    shape = RoundedCornerShape(10.dp),
                     colors = textColors,
-                    label = { Text(text = "Password") }
+                    label = { Text(text = "Password", fontSize = 12.sp) }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 MainButton(text = "Generate new password", variant = MainButtonVariant.PRIMARY, onClick = { password.value = generatePassword(14) })

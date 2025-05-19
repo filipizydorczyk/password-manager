@@ -7,10 +7,13 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -18,8 +21,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import pl.filipizydorczyk.passwordmanager.ui.composable.AddPasswordFloatingButton
+import pl.filipizydorczyk.passwordmanager.ui.composable.AlertDialogAction
 import pl.filipizydorczyk.passwordmanager.ui.composable.EditPasswordModal
 import pl.filipizydorczyk.passwordmanager.ui.composable.NewPasswordModal
 import pl.filipizydorczyk.passwordmanager.ui.composable.PasswordManagerAppBar
@@ -49,6 +54,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainView(viewModel: DataViewModel) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val vault by viewModel.vault.collectAsState(initial = null)
     val isKeyUploaded by viewModel.isKeyUploaded.collectAsState(initial = false)
     val passFiles by viewModel.passFiles.collectAsState(initial = arrayListOf())
@@ -59,6 +65,7 @@ fun MainView(viewModel: DataViewModel) {
     val selectedPass = remember { mutableStateOf<String?>(null) }
     val openNewPass = remember { mutableStateOf(false) }
     val editPass = remember { mutableStateOf<String?>(null) }
+    val openAlertDialog = remember { mutableStateOf(false) }
 
     val currentPass = remember {
         derivedStateOf { viewModel.getPassword(selectedPass.value) }
@@ -92,9 +99,14 @@ fun MainView(viewModel: DataViewModel) {
         }
     }
 
+    LaunchedEffect(openSettings.value, selectedPass.value, openNewPass.value, editPass.value, openAlertDialog.value) {
+        focusManager.clearFocus()
+    }
+
+
     Scaffold(
         topBar = { PasswordManagerAppBar(onSettingsClick = { openSettings.value = true }) },
-        floatingActionButton = { AddPasswordFloatingButton( onClick = { openNewPass.value = true }) }
+        floatingActionButton = { AddPasswordFloatingButton( onClick = { openNewPass.value = true } ) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             SearchInput(value = query.value, onValueChange = { query.value = it })
@@ -131,7 +143,7 @@ fun MainView(viewModel: DataViewModel) {
             label = selectedPass.value,
             password = currentPass.value,
             onEdit = { editPass.value = currentPass.value },
-            onDelete = { viewModel.removePassword(selectedPass.value!!); selectedPass.value = null },
+            onDelete = { openAlertDialog.value = true },
             onCancel = { selectedPass.value = null }
         )
         EditPasswordModal(
@@ -141,5 +153,14 @@ fun MainView(viewModel: DataViewModel) {
             onSave = { newPass -> handlePassEdit(selectedPass.value, newPass) },
             onCancel = {editPass.value = null}
         )
+        AlertDialogAction(
+            open = openAlertDialog.value,
+            onDismissRequest = { openAlertDialog.value = false },
+            onConfirmation = { viewModel.removePassword(selectedPass.value!!); selectedPass.value = null; openAlertDialog.value = false },
+            dialogTitle = "Are you sure?",
+            dialogText = "This action will remove the file with no possibility to roll back",
+            icon = Icons.Default.Info
+        )
+
     }
 }

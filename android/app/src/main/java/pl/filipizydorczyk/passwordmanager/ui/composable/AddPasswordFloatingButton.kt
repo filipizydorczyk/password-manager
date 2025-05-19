@@ -13,7 +13,7 @@ fun AddPasswordFloatingButton(
     FloatingActionButton(
         onClick = { onClick() },
         shape = CircleShape,
-        containerColor = Color.Black
+        containerColor = Color(0, 32, 35)
     ) {
         Text(text = "+", color = Color.White)
     }

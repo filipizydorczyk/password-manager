@@ -36,7 +36,7 @@ fun SettingsModal(
             onDismissRequest = { onDismiss() },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(300.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = "Settings", fontWeight = FontWeight.Medium, color = Color.Black)

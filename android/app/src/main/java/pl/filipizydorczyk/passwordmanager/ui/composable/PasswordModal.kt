@@ -41,7 +41,7 @@ fun PasswordModal(
     if (isOpen) {
         ModalBottomSheet(
             onDismissRequest = { onDismiss() },
-            modifier = Modifier.fillMaxWidth().height(300.dp)
+            modifier = Modifier.fillMaxWidth().height(350.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -60,7 +60,7 @@ fun PasswordModal(
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
                             contentDescription = "Delete",
-                            tint = Color.Red
+                            tint = Color(137, 31, 0)
                         )
                     }
                 }

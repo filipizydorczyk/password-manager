@@ -20,12 +20,12 @@ enum class MainButtonVariant {
 fun MainButton(text: String, variant: MainButtonVariant, onClick: () -> Unit) {
     val buttonColors = when (variant) {
         MainButtonVariant.PRIMARY -> ButtonDefaults.buttonColors(
-            containerColor = Color(26, 115, 232),
+            containerColor = Color(0, 32, 35),
             contentColor = Color.White
         )
         MainButtonVariant.SECONDARY -> ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color(26, 115, 232)
+            containerColor = Color(137, 31, 0),
+            contentColor = Color.White
         )
     }
 
