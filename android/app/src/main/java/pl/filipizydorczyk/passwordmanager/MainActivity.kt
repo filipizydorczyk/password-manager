@@ -115,9 +115,9 @@ fun MainView(viewModel: DataViewModel) {
             ) {
                 StringList(
                     list = if (query.value.isEmpty()) {
-                        passFiles
+                        passFiles.sortedBy { it }
                     } else {
-                        passFiles.filter { it.contains(query.value, ignoreCase = true) }
+                        passFiles.filter { it.contains(query.value, ignoreCase = true) }.sortedBy { it }
                     },
                     onClick = { selectedPass.value = it } )
             }

@@ -227,7 +227,9 @@ class DataViewModel(private val context: Context) : ViewModel() {
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         val fileName = cursor.getString(cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DISPLAY_NAME))
-                        files.add(fileName)
+                        if(!fileName.startsWith(".")) {
+                            files.add(fileName)
+                        }
                     }
                     cursor.close()
                 }
