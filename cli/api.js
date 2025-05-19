@@ -1,4 +1,6 @@
 #!/bin/node
+const Writable = require('stream').Writable;
+const readline = require("readline");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
@@ -123,58 +125,82 @@ const generateKey = () => {
   fs.writeFileSync(keyfile, keycontent);
 };
 
-if (command === "add" && args.length === 3) {
-  const [cmd, name, password] = args;
-  addPassword(name, password);
-  process.exit(0);
-}
-if (command === "del" && args.length === 2) {
-  const [cmd, name] = args;
-  delPassword(name);
-  process.exit(0);
-}
-if (command === "get" && (args.length === 2 || args.length === 1)) {
-  const [cmd, name] = args;
-  getPassword(name);
-  process.exit(0);
-}
-if (command === "key" && args.length === 2) {
-  const [cmd, action] = args;
-  if (action === "gen") generateKey();
-  if (action === "get") console.log(keyfile);
-  process.exit(0);
-}
-if (command === "cfg" && args.length === 2) {
-  const [cmd, path] = args;
-  cfgVault(path);
-  process.exit(0);
-}
-if (command === "gen") {
-  console.log(crypto.randomBytes(12).toString("hex"));
-  process.exit(0);
-}
-if (command === "help") {
-  console.log(`
-        Available commands:
-          app add <name> <password>   - Add a new password
-          app del <name>              - Delete a password
-          app key gen                 - Generate a random key
-          app key get                 - Get the generated key (path)
-          app get <name>              - Get password (if empty it lists them)
-          app cfg <path>              - Sets vault path
-          app gen                     - Generate password
-          app help                    - Show this help message
-        `);
-  process.exit(0);
-}
-if (args.length === 0) {
-  getPassword();
-  process.exit(0);
-}
-if (args.length === 1) {
-  getPassword(args[0]);
-  process.exit(0);
-}
+const askPassword = () => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-console.log("No action performed. Try help command");
-process.exit(127);
+  return new Promise((resolve) =>
+    rl.question("Password: ", (ans) => {
+      rl.close();
+      resolve(ans);
+    })
+  );
+};
+
+const main = async () => {
+  if (command === "add" && args.length === 3) {
+    const [cmd, name, password] = args;
+    addPassword(name, password);
+    process.exit(0);
+  }
+  if (command === "add" && args.length === 2) {
+    const [cmd, name] = args;
+    const pass = await askPassword();
+    addPassword(name, pass);
+    process.exit(0);
+  }
+  if (command === "del" && args.length === 2) {
+    const [cmd, name] = args;
+    delPassword(name);
+    process.exit(0);
+  }
+  if (command === "get" && (args.length === 2 || args.length === 1)) {
+    const [cmd, name] = args;
+    getPassword(name);
+    process.exit(0);
+  }
+  if (command === "key" && args.length === 2) {
+    const [cmd, action] = args;
+    if (action === "gen") generateKey();
+    if (action === "get") console.log(keyfile);
+    process.exit(0);
+  }
+  if (command === "cfg" && args.length === 2) {
+    const [cmd, path] = args;
+    cfgVault(path);
+    process.exit(0);
+  }
+  if (command === "gen") {
+    console.log(crypto.randomBytes(12).toString("hex"));
+    process.exit(0);
+  }
+  if (command === "help") {
+    console.log(`
+          Available commands:
+            app add <name> <password>   - Add a new password
+            app del <name>              - Delete a password
+            app key gen                 - Generate a random key
+            app key get                 - Get the generated key (path)
+            app get <name>              - Get password (if empty it lists them)
+            app cfg <path>              - Sets vault path
+            app gen                     - Generate password
+            app help                    - Show this help message
+          `);
+    process.exit(0);
+  }
+  if (args.length === 0) {
+    getPassword();
+    process.exit(0);
+  }
+  if (args.length === 1) {
+    getPassword(args[0]);
+    process.exit(0);
+  }
+
+  console.log("No action performed. Try help command");
+  process.exit(127);
+};
+
+main();
