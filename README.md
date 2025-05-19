@@ -1,4 +1,4 @@
-This password manager was created for personal use and I don't recommend to use it. It uses AES 256 as encryption algoruthm and provides cli and anrdoid application.
+This password manager was created for personal use and I don't recommend to use it. It uses AES 256 as encryption algorythm and provides cli and anrdoid application.
 
 <div style="display: flex">
     <img src="./_screenshots/Screenshot%20from%202025-05-19%2018-45-22.png" alt="Screenshot from 2025-05-19 18-45-22" width="200px" height="auto">
