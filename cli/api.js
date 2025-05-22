@@ -175,6 +175,10 @@ const main = async () => {
     console.log(crypto.randomBytes(12).toString("hex"));
     process.exit(0);
   }
+  if (command === "vault") {
+    console.log(config.vault);
+    process.exit(0);
+  }
   if (command === "help") {
     console.log(`
           Available commands:
