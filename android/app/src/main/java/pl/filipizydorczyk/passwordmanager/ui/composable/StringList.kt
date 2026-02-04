@@ -1,6 +1,5 @@
 package pl.filipizydorczyk.passwordmanager.ui.composable
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -43,7 +42,7 @@ fun StringList(list: List<String>, onClick: (v: String) -> Unit) {
                         .fillMaxWidth()
                         .clickable { onClick(list[item]) },
                     shape = RoundedCornerShape(25),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
                     elevation = CardDefaults.cardElevation(defaultElevation = Dp.Hairline),
                 ) {
                     Box( modifier = Modifier.padding(16.dp)) {
@@ -51,7 +50,7 @@ fun StringList(list: List<String>, onClick: (v: String) -> Unit) {
                     }
                 }
                 Divider(
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.outline,
                     thickness = 1.dp
                 )
             }

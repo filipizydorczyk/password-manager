@@ -2,7 +2,6 @@ package pl.filipizydorczyk.passwordmanager.ui.composable
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,18 +15,18 @@ fun PasswordManagerAppBar(
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
         ),
         title = {
-            Text(text = title, fontWeight = FontWeight.Medium, color = Color.Black)
+            Text(text = title, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
         },
         actions = {
             IconButton(onClick = { onSettingsClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_settings_24), // Replace with your settings icon resource
                     contentDescription = "Settings",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         },

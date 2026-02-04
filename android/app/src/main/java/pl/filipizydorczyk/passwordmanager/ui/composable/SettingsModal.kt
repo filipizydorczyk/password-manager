@@ -1,21 +1,19 @@
 package pl.filipizydorczyk.passwordmanager.ui.composable
 
 
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,16 +37,16 @@ fun SettingsModal(
                 .height(300.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "Settings", fontWeight = FontWeight.Medium, color = Color.Black)
+                Text(text = "Settings", fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
                 Text(
                     text = if (isKeyUploaded) "Key file is uploaded" else "No key file uploaded",
                     fontWeight = FontWeight.Normal,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = if(vault != null) "Vault:...${vault.takeLast(20)}" else "No vault selected",
                     fontWeight = FontWeight.Normal,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1
                 )
                 Spacer(modifier = Modifier.height(16.dp))

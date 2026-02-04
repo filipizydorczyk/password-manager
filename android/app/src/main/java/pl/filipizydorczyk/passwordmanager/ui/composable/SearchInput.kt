@@ -1,10 +1,10 @@
 package pl.filipizydorczyk.passwordmanager.ui.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -26,18 +26,19 @@ fun SearchInput(value: String, onValueChange: (String) -> Unit) {
         shape = CutCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White),
+            .background(color = MaterialTheme.colorScheme.background),
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.baseline_search_24), // Replace with your settings icon resource
+                painter = painterResource(id = R.drawable.baseline_search_24),
                 contentDescription = "Search icon",
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            disabledContainerColor = Color.Gray,
+            focusedContainerColor = MaterialTheme.colorScheme.background,
+            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         )

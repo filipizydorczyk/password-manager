@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,14 +52,14 @@ fun PasswordModal(
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_edit_document_24),
                             contentDescription = "Edit",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     IconButton(onClick = { onDelete() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
                             contentDescription = "Delete",
-                            tint = Color(137, 31, 0)
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -68,10 +67,10 @@ fun PasswordModal(
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_add_moderator_24),
                         contentDescription = "Password",
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
-                    Text(text = label, fontWeight = FontWeight.Medium, color = Color.Black)
-                    Text(text = password, fontWeight = FontWeight.Normal, color = Color.Black)
+                    Text(text = label, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
+                    Text(text = password, fontWeight = FontWeight.Normal, color = MaterialTheme.colorScheme.onBackground)
                     Spacer(modifier = Modifier.height(16.dp))
                     MainButton(text = "Copy", variant = MainButtonVariant.PRIMARY, onClick = { handleCopy(context, password) })
                     MainButton(text = "Cancel", variant = MainButtonVariant.SECONDARY, onClick = { onCancel() })

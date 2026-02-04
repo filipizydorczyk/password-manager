@@ -2,7 +2,6 @@ package pl.filipizydorczyk.passwordmanager.ui.composable
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -13,9 +12,9 @@ fun AddPasswordFloatingButton(
     FloatingActionButton(
         onClick = { onClick() },
         shape = CircleShape,
-        containerColor = Color(0, 32, 35)
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
-        Text(text = "+", color = Color.White)
+        Text(text = "+", color = MaterialTheme.colorScheme.onPrimary)
     }
 }
 

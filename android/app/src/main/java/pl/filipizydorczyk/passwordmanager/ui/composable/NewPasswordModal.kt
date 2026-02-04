@@ -31,9 +31,10 @@ fun NewPasswordModal(
     var password = remember { mutableStateOf("") }
 
     val textColors: TextFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = Color.White,
-        unfocusedContainerColor = Color.White,
-        disabledContainerColor = Color.Gray,
+        focusedContainerColor = MaterialTheme.colorScheme.background,
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent
     )
