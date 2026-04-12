@@ -9,7 +9,8 @@ const configstorage = path.join(process.env.HOME, ".fpasscfg");
 const configfile = path.join(configstorage, "cfg.json");
 const keyfile = path.join(configstorage, "key");
 
-const config = JSON.parse(fs.readFileSync(configfile) || {});
+const config = {};
+// const config = JSON.parse(fs.readFileSync(configfile) || {});
 
 const args = process.argv.slice(2);
 const command = args[0];
