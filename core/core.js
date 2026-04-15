@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const algorithm = "aes-256-cbc";
-const configstorage = path.join(process.env.HOME, ".fpasscfg");
+const configstorage = process.env.PSMG_CONFIG_STORAGE || path.join(process.env.HOME, ".fpasscfg");
 const configfile = path.join(configstorage, "cfg.json");
 const keyfile = path.join(configstorage, "key");
 

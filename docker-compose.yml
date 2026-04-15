@@ -1,0 +1,27 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: core/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PIN=0000
+      - PORT=3001
+    volumes:
+      - ./config:/appconfig
+      - ./vault:/vault
+
+  webapp:
+    build:
+      context: .
+      dockerfile: webapp/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NUXT_PUBLIC_API_BASE=http://localhost:3001
+    depends_on:
+      - server
+
+volumes:
+  password-manager-data:

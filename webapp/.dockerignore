@@ -1,0 +1,7 @@
+# Exclude node_modules from the initial copy to avoid bloat
+# and potential platform mismatches. They will be installed inside.
+node_modules
+.nuxt
+.output
+dist
+.git

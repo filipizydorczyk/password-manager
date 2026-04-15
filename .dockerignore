@@ -1,0 +1,12 @@
+node_modules
+webapp/node_modules
+webapp/.nuxt
+webapp/.output
+webapp/dist
+android/.gradle
+android/app/build
+.git
+_screenshots
+*.log
+.env
+.DS_Store
