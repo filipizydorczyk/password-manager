@@ -8,6 +8,8 @@ services:
     environment:
       - PIN=0000
       - PORT=3001
+      - PUID=1000
+      - PGID=1000
     volumes:
       - ./config:/appconfig
       - ./vault:/vault

@@ -26,3 +26,11 @@ This password manager was created for personal use and I don't recommend to use 
 ```
 
 Both apps can work in parralel if vaults are synced by external software and use the same key file.
+
+There is aslso a web app. Its very simple I definetly do not recommend to use it in exposed network. Security was not a priority here and I will only be using it in internal network and thats the only reason why I developed that. I would spend more time on making it secure if that was not a case
+
+![](./_screenshots/Screenshot%20From%202026-04-21%2016-45-10.png)
+![](./_screenshots/Screenshot%20From%202026-04-21%2016-45-42.png)
+![](./_screenshots/Screenshot%20From%202026-04-21%2016-46-09.png)
+
+This app is secured with PIN env variable you provide on the start of server application. See docker compose to know how to deploy it.
